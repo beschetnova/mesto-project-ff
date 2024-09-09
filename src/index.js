@@ -20,6 +20,10 @@ import {
 import { initialCards } from './components/cards.js';
 import { openModal, closeModal } from './components/modal.js';
 import { createCard, deleteCard, toggleLike } from './components/card.js';
+import { validationConfig, enableValidation, clearValidation } from './components/validation.js';
+
+// Включение валидации форм
+enableValidation(validationConfig);
 
 // Вывод карточки на страницу
 initialCards.forEach (card => {
@@ -33,10 +37,12 @@ profileEditButton.addEventListener('click', openEditProfilePopup);
 function openEditProfilePopup () {
   openModal(popupTypeEdit);
   setInitialProfileValues();
+  clearValidation(popupTypeEdit, validationConfig);
 };
 
 profileAddButton.addEventListener ('click', () => {
   openModal(popupTypeNewCard);
+  clearValidation(popupTypeNewCard, validationConfig);
 });
 
 // Обработчик закрытия попапов на крестик и оверлей
@@ -66,13 +72,15 @@ function setInitialProfileValues() {
 function handleFormSubmit(evt) {
     evt.preventDefault();
 
-    const name = nameInput.value;
-    const job = jobInput.value;
+    if (formEditElement.checkValidity()) {
+      const name = nameInput.value;
+      const job = jobInput.value;
 
-    profileNameElement.textContent = name;
-    profileJobElement.textContent = job;
+      profileNameElement.textContent = name;
+      profileJobElement.textContent = job;
 
-    closeModal(popupTypeEdit);
+      closeModal(popupTypeEdit);
+    }
 }
 
 formEditElement.addEventListener('submit', handleFormSubmit); 
@@ -80,20 +88,21 @@ formEditElement.addEventListener('submit', handleFormSubmit);
 // Обработчик события submit при добавлении новой карточки
 function handleNewCardFormSubmit(evt) {
     evt.preventDefault();
-    
-    const name = newCardNameInput.value;
-    const link = newCardLinkInput.value;
-    const newCardData = {
-      name: name,
-      link: link,
-    };
 
-    const newCardElement = createCard(newCardData, deleteCard, fillPopupImageInfo, toggleLike);
-    placesList.prepend(newCardElement);
+    if (newCardForm.checkValidity()) {
+      const name = newCardNameInput.value;
+      const link = newCardLinkInput.value;
+      const newCardData = {
+        name: name,
+        link: link,
+      };
 
-    newCardForm.reset();
-    closeModal(popupTypeNewCard);
+      const newCardElement = createCard(newCardData, deleteCard, fillPopupImageInfo, toggleLike);
+      placesList.prepend(newCardElement);
+
+      newCardForm.reset();
+      closeModal(popupTypeNewCard);
+    }
 }
 
 newCardForm.addEventListener('submit', handleNewCardFormSubmit);
-
