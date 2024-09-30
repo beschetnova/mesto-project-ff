@@ -1,8 +1,4 @@
-import { openModal } from '../components/modal.js';
-import { 
-  popupTypeImage,
-  cardTemplate
-} from '../components/constants.js';
+import { cardTemplate } from '../components/constants.js';
 import { deleteCard, addLike, deleteLike } from '../components/api.js';
 
 // Создание карточки
@@ -23,14 +19,18 @@ function createCard (data, deleteCard, fillPopupImageInfo, toggleLike, userId) {
     else {
     deleteButton.addEventListener("click", () => {
       const cardId = data._id;
-      deleteCard(cardId);
-      cardElement.remove();
+      deleteCard(cardId)
+      .then(() => {
+        cardElement.remove();
+      })
+      .catch((err) => {
+        console.error("Произошла ошибка при удалении карточки:", err);
+      })
     })
   }
 
   cardImage.addEventListener ('click', () => {
     fillPopupImageInfo(data);
-    openModal(popupTypeImage);
   })
 
   const cardLikeButton = cardElement.querySelector('.card__like-button');

@@ -16,7 +16,6 @@ export const placesList = document.querySelector('.places__list');
 export const cardTemplate = document.querySelector('#card-template').content; 
 
 // Форма редактирования профиля
-export let userId = '';
 export const formEditElement = document.querySelector('.popup_type_edit .popup__form');
 export const formEditAvatarElement = document.querySelector('.popup_type_avatar .popup__form');
 export const nameInput = document.querySelector('.popup__input_type_name');

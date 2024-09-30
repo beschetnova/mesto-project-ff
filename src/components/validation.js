@@ -1,11 +1,4 @@
-const validationConfig = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-};
+import { validationConfig } from "..";
 
 // Показать ошибку ввода
 function showInputError (formElement, inputElement, validationConfig) {
@@ -22,7 +15,8 @@ function hideInputError (formElement, inputElement, validationConfig) {
 
     inputElement.classList.remove(validationConfig.inputErrorClass);
     errorElement.classList.remove(validationConfig.errorClass);
-    errorElement.textContent = '';
+    
+    inputElement.setCustomValidity('');
 };
 
 // Проверка валидности поля ввода
@@ -33,7 +27,7 @@ function checkInputValidity (formElement, inputElement) {
   else {
     inputElement.setCustomValidity('');
   }
-  
+
   if (!inputElement.validity.valid) {
     showInputError(formElement, inputElement, validationConfig);
   }
@@ -85,9 +79,10 @@ function clearValidation (formElement, validationConfig) {
     const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
     const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
 
-    inputList.forEach((inputElement) =>
-      hideInputError(formElement, inputElement, validationConfig));
-    toggleButtonState(inputList, buttonElement, validationConfig);
+    inputList.forEach((inputElement) => {
+      hideInputError(formElement, inputElement, validationConfig);
+      toggleButtonState(inputList, buttonElement, validationConfig);
+    })
 };
-  
+
 export { validationConfig, enableValidation, clearValidation }
